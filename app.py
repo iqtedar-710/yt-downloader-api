@@ -42,6 +42,7 @@ def download_video():
                 'format': 'bestaudio/best',
                 'outtmpl': output_template,
                 'cookiefile': 'cookies.txt',
+                'impersonate': 'chrome',
                 'noplaylist': True,
                 'quiet': True,
                 'extractor_args': {
@@ -80,6 +81,7 @@ def download_video():
                 'merge_output_format': 'mp4',
                 'outtmpl': output_template,
                 'cookiefile': 'cookies.txt',
+                'impersonate': 'chrome',
                 'noplaylist': True,
                 'quiet': True,
                 'extractor_args': {
