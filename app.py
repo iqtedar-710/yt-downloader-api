@@ -8,85 +8,65 @@ app = Flask(__name__)
 CORS(app)
 
 DOWNLOAD_FOLDER = "downloads"
-
-if not os.path.exists(DOWNLOAD_FOLDER):
-    os.makedirs(DOWNLOAD_FOLDER)
-
+os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
 
 @app.route("/download", methods=["POST"])
 def download_video():
 
     data = request.json
-
     video_url = data.get("url")
     download_type = data.get("type", "mp4")
     quality = data.get("quality", "720")
 
     if not video_url:
-        return jsonify({
-            "error": "No URL provided"
-        }), 400
+        return jsonify({"error": "No URL provided"}), 400
 
     unique_id = str(uuid.uuid4())
-
-    output_template = os.path.join(
-        DOWNLOAD_FOLDER,
-        f"{unique_id}.%(ext)s"
-    )
+    output_template = os.path.join(DOWNLOAD_FOLDER, f"{unique_id}.%(ext)s")
 
     try:
+
+        base_opts = {
+            "outtmpl": output_template,
+            "noplaylist": True,
+            "quiet": True,
+            "cookiefile": "cookies.txt",
+        }
 
         if download_type == "mp3":
 
             ydl_opts = {
-    'format': 'bestaudio/best',
-    'outtmpl': output_template,
-    'noplaylist': True,
-    'quiet': True,
-    'cookiefile': 'cookies.txt',
-    'postprocessors': [{
-        'key': 'FFmpegExtractAudio',
-        'preferredcodec': 'mp3',
-        'preferredquality': quality,
-    }],
-}
+                **base_opts,
+                "format": "bestaudio/best",
+                "postprocessors": [{
+                    "key": "FFmpegExtractAudio",
+                    "preferredcodec": "mp3",
+                    "preferredquality": quality,
+                }]
+            }
 
         else:
 
             format_map = {
-                "144": "bestvideo[height<=144]+bestaudio/best/best",
-                "240": "bestvideo[height<=240]+bestaudio/best/best",
-                "360": "bestvideo[height<=360]+bestaudio/best/best",
-                "480": "bestvideo[height<=480]+bestaudio/best/best",
-                "720": "bestvideo[height<=720]+bestaudio/best/best",
-                "1080": "bestvideo[height<=1080]+bestaudio/best/best",
-                "1440": "bestvideo[height<=1440]+bestaudio/best/best",
-                "2160": "bestvideo[height<=2160]+bestaudio/best/best",
-                "4320": "bestvideo[height<=4320]+bestaudio/best/best"
+                "144": "best[height<=144]",
+                "240": "best[height<=240]",
+                "360": "best[height<=360]",
+                "480": "best[height<=480]",
+                "720": "best[height<=720]",
+                "1080": "best[height<=1080]",
+                "1440": "best[height<=1440]",
+                "2160": "best[height<=2160]",
+                "4320": "best[height<=4320]",
             }
 
-            selected_format = format_map.get(
-                quality,
-                "best"
-            )
-
             ydl_opts = {
-           ydl_opts = {
-    'format': selected_format,
-    'merge_output_format': 'mp4',
-    'outtmpl': output_template,
-    'noplaylist': True,
-    'quiet': True,
-    'cookiefile': 'cookies.txt',
-}
+                **base_opts,
+                "format": format_map.get(quality, "best"),
+                "merge_output_format": "mp4",
+            }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-
-            info = ydl.extract_info(
-                video_url,
-                download=True
-            )
-
+            info = ydl.extract_info(video_url, download=True)
             filename = ydl.prepare_filename(info)
 
             if download_type == "mp3":
@@ -94,23 +74,12 @@ def download_video():
             else:
                 filename = os.path.splitext(filename)[0] + ".mp4"
 
-        return send_file(
-            filename,
-            as_attachment=True
-        )
+        return send_file(filename, as_attachment=True)
 
     except Exception as e:
-
-        return jsonify({
-            "error": str(e)
-        }), 500
+        return jsonify({"error": str(e)}), 500
 
 
 if __name__ == "__main__":
-
     port = int(os.environ.get("PORT", 5000))
-
-    app.run(
-        host="0.0.0.0",
-        port=port
-    )
+    app.run(host="0.0.0.0", port=port)
