@@ -50,17 +50,16 @@ def download_video():
 
     else:
 
-        format_map = {
-            "144": "bestvideo[height<=144]+bestaudio/best",
-            "240": "bestvideo[height<=240]+bestaudio/best",
-            "360": "bestvideo[height<=360]+bestaudio/best",
-            "480": "bestvideo[height<=480]+bestaudio/best",
-            "720": "bestvideo[height<=720]+bestaudio/best",
-            "1080": "bestvideo[height<=1080]+bestaudio/best",
-            "1440": "bestvideo[height<=1440]+bestaudio/best",
-            "2160": "bestvideo[height<=2160]+bestaudio/best",
-            "4320": "bestvideo[height<=4320]+bestaudio/best"
-        }
+       format_map = {
+    "144": "bestvideo[height<=144]+bestaudio/best/best",
+    "240": "bestvideo[height<=240]+bestaudio/best/best",
+    "360": "bestvideo[height<=360]+bestaudio/best/best",
+    "480": "bestvideo[height<=480]+bestaudio/best/best",
+    "720": "bestvideo[height<=720]+bestaudio/best/best",
+    "1080": "bestvideo[height<=1080]+bestaudio/best/best",
+    "1440": "bestvideo[height<=1440]+bestaudio/best/best",
+    "2160": "bestvideo[height<=2160]+bestaudio/best/best",
+    "4320": "bestvideo[height<=4320]+bestaudio/best/best"
 
         selected_format = format_map.get(
             quality,
