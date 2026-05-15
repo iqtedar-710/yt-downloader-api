@@ -12,6 +12,7 @@ DOWNLOAD_FOLDER = "downloads"
 if not os.path.exists(DOWNLOAD_FOLDER):
     os.makedirs(DOWNLOAD_FOLDER)
 
+
 @app.route("/download", methods=["POST"])
 def download_video():
 
@@ -37,23 +38,23 @@ def download_video():
 
         if download_type == "mp3":
 
-           ydl_opts = {
-    'format': 'bestaudio/best',
-    'outtmpl': output_template,
-    'cookiefile': 'cookies.txt',
-    'noplaylist': True,
-    'quiet': True,
-    'extractor_args': {
-        'youtube': {
-            'player_client': ['android']
-        }
-    },
-    'postprocessors': [{
-        'key': 'FFmpegExtractAudio',
-        'preferredcodec': 'mp3',
-        'preferredquality': quality,
-    }],
-}
+            ydl_opts = {
+                'format': 'bestaudio/best',
+                'outtmpl': output_template,
+                'cookiefile': 'cookies.txt',
+                'noplaylist': True,
+                'quiet': True,
+                'extractor_args': {
+                    'youtube': {
+                        'player_client': ['android']
+                    }
+                },
+                'postprocessors': [{
+                    'key': 'FFmpegExtractAudio',
+                    'preferredcodec': 'mp3',
+                    'preferredquality': quality,
+                }],
+            }
 
         else:
 
@@ -74,19 +75,19 @@ def download_video():
                 "best"
             )
 
-           ydl_opts = {
-    'format': selected_format,
-    'merge_output_format': 'mp4',
-    'outtmpl': output_template,
-    'cookiefile': 'cookies.txt',
-    'noplaylist': True,
-    'quiet': True,
-    'extractor_args': {
-        'youtube': {
-            'player_client': ['android']
-        }
-    },
-}
+            ydl_opts = {
+                'format': selected_format,
+                'merge_output_format': 'mp4',
+                'outtmpl': output_template,
+                'cookiefile': 'cookies.txt',
+                'noplaylist': True,
+                'quiet': True,
+                'extractor_args': {
+                    'youtube': {
+                        'player_client': ['android']
+                    }
+                },
+            }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
 
