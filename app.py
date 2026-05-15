@@ -38,7 +38,9 @@ def download_video():
         ydl_opts = {
             'format': 'bestaudio/best',
             'outtmpl': output_template,
+            'cookiefile': 'cookies.txt',
             'noplaylist': True,
+            'quiet': True,
             'postprocessors': [{
                 'key': 'FFmpegExtractAudio',
                 'preferredcodec': 'mp3',
@@ -69,7 +71,9 @@ def download_video():
             'format': selected_format,
             'merge_output_format': 'mp4',
             'outtmpl': output_template,
+            'cookiefile': 'cookies.txt',
             'noplaylist': True,
+            'quiet': True,
         }
 
     try:

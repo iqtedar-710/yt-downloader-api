@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Render API Test</title>
+</head>
+
+<body>
+
+    <h1>YT Downloader Test</h1>
+
+    <input
+        type="text"
+        id="videoUrl"
+        placeholder="Paste YouTube URL"
+        size="50"
+    >
+
+    <br><br>
+
+    <select id="downloadType">
+
+        <option value="mp4">
+            MP4
+        </option>
+
+        <option value="mp3">
+            MP3
+        </option>
+
+    </select>
+
+    <br><br>
+
+    <button onclick="testDownload()">
+        Test Download
+    </button>
+
+    <script>
+
+        async function testDownload() {
+
+            const url =
+                document.getElementById("videoUrl").value;
+
+            const type =
+                document.getElementById("downloadType").value;
+
+            const response = await fetch(
+                "https://yt-downloader-api-bjyh.onrender.com/download",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        url: url,
+                        type: type,
+                        quality: "720"
+                    })
+                }
+            );
+
+            const blob = await response.blob();
+
+            const downloadUrl =
+                window.URL.createObjectURL(blob);
+
+            const a =
+                document.createElement("a");
+
+            a.href = downloadUrl;
+
+            if (type === "mp3") {
+                a.download = "audio.mp3";
+            } else {
+                a.download = "video.mp4";
+            }
+
+            document.body.appendChild(a);
+
+            a.click();
+
+            a.remove();
+        }
+
+    </script>
+
+</body>
+
+</html>
