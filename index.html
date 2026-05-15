@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>YouTube Downloader</title>
+</head>
+
+<body>
+
+    <h1>YouTube Downloader</h1>
+
+    <input
+        type="text"
+        id="videoUrl"
+        placeholder="Paste YouTube URL"
+        size="50"
+    >
+
+    <br><br>
+
+    <select id="downloadType">
+        <option value="mp4">MP4 Video</option>
+        <option value="mp3">MP3 Audio</option>
+    </select>
+
+    <br><br>
+
+    <button onclick="downloadVideo()">
+        Download
+    </button>
+
+    <script>
+
+        async function downloadVideo() {
+
+            const videoUrl =
+                document.getElementById("videoUrl").value;
+
+            const downloadType =
+                document.getElementById("downloadType").value;
+
+            const response = await fetch(
+                "http://127.0.0.1:5000/download",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        url: videoUrl,
+                        type: downloadType
+                    })
+                }
+            );
+
+            const blob = await response.blob();
+
+            const downloadUrl =
+                window.URL.createObjectURL(blob);
+
+            const a =
+                document.createElement("a");
+
+            a.href = downloadUrl;
+
+            if (downloadType === "mp3") {
+                a.download = "audio.mp3";
+            } else {
+                a.download = "video.mp4";
+            }
+
+            document.body.appendChild(a);
+
+            a.click();
+
+            a.remove();
+        }
+
+    </script>
+
+</body>
+
+</html>
