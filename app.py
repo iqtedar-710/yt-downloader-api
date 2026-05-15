@@ -60,7 +60,7 @@ def download_video():
     "1440": "bestvideo[height<=1440]+bestaudio/best/best",
     "2160": "bestvideo[height<=2160]+bestaudio/best/best",
     "4320": "bestvideo[height<=4320]+bestaudio/best/best"
-
+}
         selected_format = format_map.get(
             quality,
             "best"
